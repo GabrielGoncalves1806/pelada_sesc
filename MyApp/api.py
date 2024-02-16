@@ -6,7 +6,6 @@ link = 'https://pelada-sesc-default-rtdb.firebaseio.com/peladas'
 def get_active_party():
     req = requests.get(f'{link}/.json')
     all_party = req.json()
-    
     for party in all_party:
         if all_party[party]['active'] == True:
             return party  
@@ -22,4 +21,8 @@ def update_players():
         return players_list
     else:
         return None
+    
+def add_new_player(player):
+    
+    pass
     

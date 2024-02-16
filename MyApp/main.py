@@ -1,8 +1,9 @@
+from typing import Any, List
 import flet as ft
 from api import update_players
 from datetime import date
 
-class MyApp(ft.UserControl):
+class HomePage(ft.UserControl):
     def __init__(self):
         super().__init__()
         self.date = date.today()
@@ -19,7 +20,9 @@ class MyApp(ft.UserControl):
             self.page.update()
             self.page.add(self.players_list)
             self.page.update()
-            self.players_list.controls.clear()
+        else:
+            self.page.update()
+            self.page.add(self.players_list)
 
 
     def build(self):
@@ -47,11 +50,18 @@ class MyApp(ft.UserControl):
                 
                 ]
         )
+    
+class Payment(ft.UserControl):
+    def __init__(self):
+        super().__init__()
+
+    def build(self):
+        pass
                 
 def main(page: ft.Page):
 
     page.horizontal_alignment = ft.MainAxisAlignment.CENTER
-    myapp = MyApp()
+    myapp = HomePage()
     page.views.append(myapp)
     page.update()
 
