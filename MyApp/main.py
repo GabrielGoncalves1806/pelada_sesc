@@ -1,46 +1,58 @@
 import flet as ft
-from time import sleep
-from random import randint
+from api import update_players
+from datetime import date
 
-def main(page: ft.Page):
-    page.horizontal_alignment = ft.MainAxisAlignment.CENTER
-    page.vertical_alignment = ft.MainAxisAlignment.CENTER
+class MyApp(ft.UserControl):
+    def __init__(self):
+        super().__init__()
+        self.date = date.today()
+        self.players_list = ft.ListView([])
+        
 
-    count = ft.Text('0',size=25)
-    slider = ft.Container(bgcolor=ft.colors.GREEN, width=1,height=20,border_radius=5)
+    def update_list(self):
+        self.players_list.controls.clear()
+        players = update_players()
+        if players != None:
+            for pos,player in enumerate(players):
+                self.players_list.controls.append(ft.Text(f'{pos+1} - {player}'),)
+            print(players)
+            self.page.update()
+            self.page.add(self.players_list)
+            self.page.update()
+            self.players_list.controls.clear()
 
-    pf = ft.FilePicker()
 
-    def num(e):
-        for num in range(0,randint(1,100)):
-            count.value = f'{num}%'
-            slider.width = num
-            page.update()
-            sleep(.05)
+    def build(self):
 
-    def pick_files_result(e: ft.FilePickerResultEvent):
-        e.selected_files.value = (
-            ", ".join(map(lambda f: f.name, e.files)) if e.files else "Cancelled!"
-        )
-        e.selected_files.update()
-
-    files = ft.FilePicker(on_result=pick_files_result)
-    page.add(  
-            ft.Column(
-                [
-                ft.Text('QUAL O A CHANCE DE VOCÊ DAR A BUNDA HOJE?'),
+        return ft.Column(
+                [   
+                ft.Container(
+                    bgcolor=ft.colors.GREY_800, 
+                    height=50,
+                    width=1000, 
+                    border_radius=10,
+                    alignment= ft.alignment.center,
+                    content=ft.Text(f'Pelada Sesc {self.date}'),
+                    ),        
+                    
                 ft.Row(
                     [
-                    count,
-                    slider,
-                    
+                        ft.ElevatedButton("Adicionar nome a lista"),
+                        ft.IconButton(ft.icons.REFRESH, on_click=lambda _: self.update_list())
                     ],
-                    alignment=ft.MainAxisAlignment.CENTER
+                    alignment= ft.MainAxisAlignment.CENTER
                 ),
-                ft.ElevatedButton("APERTE", on_click=num)
-                ],
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER
-            )
-    )
-print('oi')
-ft.app(main)
+
+                self.players_list
+                
+                ]
+        )
+                
+def main(page: ft.Page):
+
+    page.horizontal_alignment = ft.MainAxisAlignment.CENTER
+    myapp = MyApp()
+    page.views.append(myapp)
+    page.update()
+
+ft.app(target=main)
