@@ -42,7 +42,5 @@ def main(page: ft.Page):
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER
             )
     )
-
-
-
+print('oi')
 ft.app(main)
